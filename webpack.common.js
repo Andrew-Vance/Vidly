@@ -1,7 +1,7 @@
 const path = require('path');
 
 const SRC_FILE = path.join(__dirname, 'client/index.jsx');
-const OUT_PATH = path.join(__dirname, 'public');
+const OUT_PATH = path.join(__dirname, 'dist');
 
 module.exports = {
   entry: SRC_FILE,
