@@ -5,5 +5,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/', express.static('dist');
+app.use('/', express.static('dist'));
 
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+})
