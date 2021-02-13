@@ -4,7 +4,12 @@
   "description": "a video upload and streaming application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev-start": "nodemon server",
+    "build": "wepback --config webpack.prod.js",
+    "dev-watch": "webpack --config webpack.dev.js --watch",
+    "dev-build": "webpack --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +33,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "webpack": "^5.21.2",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.5.0",
+    "webpack-merge": "^5.7.3"
   }
 }
