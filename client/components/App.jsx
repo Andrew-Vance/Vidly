@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Upload from './Upload.jsx';
+import Browse from './Browse.jsx';
+import Video from './Video.jsx';
 
 const App = () => {
 
@@ -12,20 +15,23 @@ const App = () => {
 
   const renderView = () => {
     if (view === 'video') {
-
+      return <Video name={video} />;
     } else if (view === 'browse') {
-
+      return (
+      <ul>< Browse changeView={changeView} /></ul>
+      );
     } else if (view === 'upload') {
-
+      return < Upload />;
     }
   }
 
   return (
     <div>
-      <div className='header'>
-        <span className='nav' onClick={() => {changeView('Browse')}}>Browse</span>
-        <span className='nav' onClick={() => {changeView('Upload')}}>Upload</span>
+      <div id='header'>
+        <span className='nav' onClick={() => {changeView('browse')}}>Browse</span>
+        <span className='nav' onClick={() => {changeView('upload')}}>Upload</span>
       </div>
+      {renderView()}
     </div>
   );
 };
