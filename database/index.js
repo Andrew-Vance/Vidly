@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(err => {
-  if (err) => {
+  if (err) {
     console.log(err);
   } else {
     console.log('connected to db');
@@ -17,3 +17,16 @@ connection.connect(err => {
 
 const db = Promise.promisifyAll(connection, {multiArgs: true});
 
+const getAll = () => {
+  return db.queryAsync('select * from videos').spread(results => results);
+};
+
+const create = (name) => {
+  return db.queryAsync(`insert into videos (name) values ("${name}")`).spread(results => results);
+};
+
+
+module.exports = {
+  getAll,
+  create
+}
