@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-const VideoEntry = ({ video, changeView }) => {
+const VideoEntry = ({ video }) => {
 
   return (
-    <div onClick={()=>{changeView('video', video.name)}}>
-      {video.name.slice(0, -4)}
+    <div>
+      <span>{video.name.slice(0, -4)}</span><br></br><br></br>
+      <span className='description'>{video.description}</span>
     </div>
   );
 };
