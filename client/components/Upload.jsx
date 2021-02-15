@@ -23,11 +23,10 @@ const Upload = () => {
         }
       })
       .then(response => {
-        //update client side video list here
         console.log(response.data);
       })
       .catch(err => {
-        console.log(err);
+        window.alert(err.response.data);
       })
     } else {
       window.alert('wrong file type, expecting an mp4');
