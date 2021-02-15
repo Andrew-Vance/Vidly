@@ -13,7 +13,6 @@ app.use('/', express.static('dist'));
 app.get('/videos', (req, res) => {
   db.getAll()
   .then(results => {
-    console.log(results);
     res.send(results);
   })
   .catch(err => {
@@ -28,21 +27,29 @@ app.post('/video', (req, res) => {
   } else {
     let file = req.files.file;
 
-    file.mv(`/Users/andrewvance/Projects/Vidly/files/${file.name}`, err => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-      }
+    db.findOne(file.name)
+    .then(results => {
+      if (results.length > 0) {
+        res.status(400).send('video name already exists');
+      } else {
+        file.mv(`/Users/andrewvance/Projects/Vidly/files/${file.name}`, err => {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err);
+          }
 
-      db.create(file.name)
-      .then(result => {
-        res.send(file.name);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send('file upload unsuccessful');
-      })
+          db.create(file.name)
+          .then(result => {
+            res.send(file.name);
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(500).send('file upload unsuccessful');
+          })
+        })
+      }
     })
+
   }
 });
 
