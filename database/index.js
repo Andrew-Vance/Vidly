@@ -21,6 +21,10 @@ const getAll = () => {
   return db.queryAsync('select * from videos').spread(results => results);
 };
 
+const findOne = (name) => {
+  return db.queryAsync(`select * from videos where name = "${name}"`).spread(results => results);
+};
+
 const create = (name) => {
   return db.queryAsync(`insert into videos (name) values ("${name}")`).spread(results => results);
 };
@@ -28,5 +32,6 @@ const create = (name) => {
 
 module.exports = {
   getAll,
+  findOne,
   create
 }
