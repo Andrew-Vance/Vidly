@@ -16,7 +16,7 @@ const Browse = ({ changeView }) => {
 
   return (
      _.map(videos, video => {
-      return <li key={video.id}> < VideoEntry video={video} changeView={changeView} /> </li>;
+      return <li key={video.id} onClick={()=>{changeView('video', video.name)}}> < VideoEntry video={video} changeView={changeView} /> </li>;
      })
   );
 };
