@@ -29,9 +29,14 @@ const create = (name) => {
   return db.queryAsync(`insert into videos (name) values ("${name}")`).spread(results => results);
 };
 
+const update = (name, description) => {
+  return db.queryAsync(`update videos set description = "${description}" where name = "${name}"`).spread(results => results);
+};
+
 
 module.exports = {
   getAll,
   findOne,
-  create
+  create,
+  update
 }
