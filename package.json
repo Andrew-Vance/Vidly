@@ -30,6 +30,7 @@
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "fs": "0.0.1-security",
     "lodash": "^4.17.20",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
