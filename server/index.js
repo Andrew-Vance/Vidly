@@ -1,6 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const port = process.env.PORT || 3000;
+const db = require('../database');
 
 const app = express();
 
@@ -8,6 +9,18 @@ app.use(fileUpload());
 app.use(express.json());
 
 app.use('/', express.static('dist'));
+
+app.get('/videos', (req, res) => {
+  db.getAll()
+  .then(results => {
+    console.log(results);
+    res.send(results);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  })
+});
 
 app.post('/video', (req, res) => {
   if (req.files == null) {
@@ -21,7 +34,14 @@ app.post('/video', (req, res) => {
         res.status(500).send(err);
       }
 
-      res.send(file.name);
+      db.create(file.name)
+      .then(result => {
+        res.send(file.name);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).send('file upload unsuccessful');
+      })
     })
   }
 });
