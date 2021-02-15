@@ -4,5 +4,6 @@ USE vidly;
 
 CREATE TABLE IF NOT EXISTS videos (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(64)
+  name VARCHAR(64),
+  description VARCHAR(124)
 );
