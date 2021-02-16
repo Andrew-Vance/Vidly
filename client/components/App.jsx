@@ -28,6 +28,7 @@ const App = () => {
   return (
     <div>
       <div id='header'>
+        <span className='site-title'>Vidly</span>
         <span className='nav' onClick={() => {changeView('browse')}}>Browse</span>
         <span className='nav' onClick={() => {changeView('upload')}}>Upload</span>
       </div>
