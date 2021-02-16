@@ -3,6 +3,8 @@ const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const port = process.env.PORT || 3000;
 const db = require('../database');
+const thumb = require('node-video-thumb');
+const path = require('path');
 
 const app = express();
 
@@ -53,6 +55,11 @@ app.get('/videos', (req, res) => {
   })
 });
 
+app.get('/thumbnail/:name', (req, res) => {
+  let fileLocation = path.resolve(`./files/${req.params.name.slice(0, -4)}.jpg`)
+  res.sendFile(fileLocation);
+})
+
 app.post('/video', (req, res) => {
   if (req.files == null) {
     res.status(400).send('no file was uploaded')
@@ -72,6 +79,14 @@ app.post('/video', (req, res) => {
 
           db.create(file.name)
           .then(result => {
+            thumb({
+              source: path.resolve(`./files/${file.name}`),
+              target: path.resolve(`./files/${file.name.slice(0, -4)}.jpg"`),
+              width: 480,
+              height: 340,
+              seconds: 10
+            })
+
             res.send(file.name);
           })
           .catch(err => {
@@ -88,7 +103,6 @@ app.post('/video', (req, res) => {
 app.patch('/video/:name', (req, res) => {
   let name = req.params.name;
   let description = req.body.description;
-  console.log(req.body);
   db.update(name, description)
   .then(result => {
     res.status(200).send('description updated');
