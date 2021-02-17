@@ -85,7 +85,7 @@ input {
 }
 
 #upload-confirmation {
-  font-size: 50px;
+  font-size: 30px;
   text-align: center;
   margin-top: 10px;
   font-weight: 800;
@@ -108,4 +108,45 @@ input {
 
 #videoPlayer:focus {
   outline: none;
+}
+
+#uploading-confirmation {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
+  margin-left: 5px;
+  font-weight: 600;
+  color: rgb(110, 153, 61);
+}
+
+.loader-quart {
+	border-radius: 50px;
+	border: 6px solid rgba(255,255,255,0.4);
+}
+
+.loader-quart:after {
+	content: '';
+	position: absolute;
+	top: -6px;
+	left: -6px;
+	bottom: -6px;
+	right: -6px;
+	border-radius: 50px;
+	border: 6px solid transparent;
+	border-top-color: rgb(138, 190, 79);
+	-webkit-animation: spin 1s linear infinite;
+	animation: spin 1s linear infinite;
+}
+
+.loader {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+}
+
+@keyframes spin {
+  0%{ -webkit-transform: rotate(0deg); tranform: rotate(0deg);}
+100%{ -webkit-transform: rotate(360deg); tranform: rotate(360deg);}
 }
