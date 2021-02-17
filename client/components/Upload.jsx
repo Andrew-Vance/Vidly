@@ -6,6 +6,7 @@ const Upload = () => {
   const [fileName, updateFileName] = useState('');
   const [description, updateDescription] = useState('');
   const [uploaded, updateUploaded] = useState(false);
+  const [uploading, updateUploading] = useState(false);
 
   const handleChange = (e) => {
     let file = e.target.files[0];
@@ -17,26 +18,21 @@ const Upload = () => {
     updateUploaded(false);
 
     if (file.type === 'video/mp4') {
+      updateUploading(true);
       var formData = new FormData();
       formData.append('file', file, fileName);
 
-      axios.post('/video', formData, {
+      axios.post(`/video/${description}`, formData, {
         headers: {
           'Content-Type': 'multipart/formdata'
         }
       })
       .then(response => {
-        axios.patch(`/video/${fileName}`, {description})
-        .then(result => {
-          updateUploaded(true);
-        })
-        .catch(err => {
-          window.alert('error updating video descrption');
-          console.log(err);
-        });
+        updateUploaded(true);
+        updateUploading(false);
       })
       .catch(err => {
-        window.alert(err.response.data);
+        window.alert(err);
       })
     } else {
       window.alert('wrong file type, expecting an mp4');
@@ -49,7 +45,14 @@ const Upload = () => {
     if (uploaded) {
       return (
         <div id='upload-confirmation'>
-          UPLOADED
+          UPLOADED AND PROCESSING
+        </div>
+      );
+    } else if (uploading) {
+      return (
+        <div id='uploading-confirmation'>
+          <span className="loader loader-quart"></span>
+          uploading
         </div>
       );
     }
