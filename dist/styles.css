@@ -81,6 +81,7 @@ input {
   top: -20px;
   font-size: 50px;
   font-weight: 800;
+  cursor: pointer;
 }
 
 #upload-confirmation {
