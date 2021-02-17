@@ -15,7 +15,7 @@ const App = () => {
 
   const renderView = () => {
     if (view === 'video') {
-      return <Video name={video} />;
+      return <Video video={video} />;
     } else if (view === 'browse') {
       return (
       <ul>< Browse changeView={changeView} /></ul>
