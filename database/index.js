@@ -25,8 +25,8 @@ const findOne = (name) => {
   return db.queryAsync(`select * from videos where name = "${name}"`).spread(results => results);
 };
 
-const create = (name, videoUrl, thumbUrl) => {
-  return db.queryAsync(`insert into videos (name, videoUrl, thumbUrl) values ("${name}", "${videoUrl}", "${thumbUrl}")`).spread(results => results);
+const create = (name, videoUrl, thumbUrl, description) => {
+  return db.queryAsync(`insert into videos (name, videoUrl, thumbUrl, description) values ("${name}", "${videoUrl}", "${thumbUrl}", "${description}")`).spread(results => results);
 };
 
 const update = (name, description) => {
