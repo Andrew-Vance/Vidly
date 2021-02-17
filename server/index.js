@@ -27,9 +27,10 @@ app.get('/videos', (req, res) => {
 });
 
 
-app.post('/video', (req, res) => {
+app.post('/video/:description', (req, res) => {
+  let description = req.params.description;
   if (req.files == null) {
-    res.status(400).send('no file was uploaded')
+    res.status(400).send('no file was uploaded');
   } else {
     let file = req.files.file;
 
@@ -53,18 +54,17 @@ app.post('/video', (req, res) => {
 
           let thumbFile = fs.readFileSync(`./files/${file.name.slice(0, -4)}.jpg`);
 
+          res.send('uploaded');
+
           let thumbUrl = await upload(`${file.name.slice(0, -4)}.jpg`, thumbFile, 'image/jpeg');
           let videoUrl = await upload(file.name, file.data, 'video/mp4');
+          fs.unlink(path.resolve(`./files/${file.name}`), () => {});
+          fs.unlink(path.resolve(`./files/${file.name.slice(0, -4)}.jpg`), () => {});
 
-          db.create(file.name, videoUrl, thumbUrl)
-          .then(result => {
-            fs.unlink(path.resolve(`./files/${file.name}`), () => {});
-            fs.unlink(path.resolve(`./files/${file.name.slice(0, -4)}.jpg`), () => {});
-            res.send('uploaded');
-          })
+          db.create(file.name, videoUrl, thumbUrl, description)
           .catch(err => {
             console.log(err);
-            res.status(500).send('file upload unsuccessful');
+            console.log('file upload unsuccessful');
           });
 
         });
