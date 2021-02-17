@@ -3,8 +3,9 @@ const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const port = process.env.PORT || 3000;
 const db = require('../database');
-const thumb = require('node-video-thumb');
 const path = require('path');
+const createThumbnail = require('../Utils/createThumbnail.js');
+const upload = require('../Utils/uploadToS3.js');
 
 const app = express();
 
@@ -13,36 +14,6 @@ app.use(express.json());
 
 app.use('/', express.static('dist'));
 
-app.get('/video/:name', (req, res) => {
-  const path = `./files/${req.params.name}`
-  const stat = fs.statSync(path)
-  const fileSize = stat.size
-  const range = req.headers.range
-  if (range) {
-    const parts = range.replace(/bytes=/, "").split("-")
-    const start = parseInt(parts[0], 10)
-    const end = parts[1]
-      ? parseInt(parts[1], 10)
-      : fileSize-1
-    const chunksize = (end-start)+1
-    const file = fs.createReadStream(path, {start, end})
-    const head = {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': chunksize,
-      'Content-Type': 'video/mp4',
-    }
-    res.writeHead(206, head);
-    file.pipe(res);
-  } else {
-    const head = {
-      'Content-Length': fileSize,
-      'Content-Type': 'video/mp4',
-    }
-    res.writeHead(200, head)
-    fs.createReadStream(path).pipe(res)
-  }
-});
 
 app.get('/videos', (req, res) => {
   db.getAll()
@@ -55,10 +26,6 @@ app.get('/videos', (req, res) => {
   })
 });
 
-app.get('/thumbnail/:name', (req, res) => {
-  let fileLocation = path.resolve(`./files/${req.params.name.slice(0, -4)}.jpg`)
-  res.sendFile(fileLocation);
-})
 
 app.post('/video', (req, res) => {
   if (req.files == null) {
@@ -70,33 +37,43 @@ app.post('/video', (req, res) => {
     .then(results => {
       if (results.length > 0) {
         res.status(400).send('video name already exists');
+        return;
+
       } else {
-        file.mv(`/Users/andrewvance/Projects/Vidly/files/${file.name}`, err => {
+        file.mv(`/Users/andrewvance/Projects/Vidly/files/${file.name}`, async (err) => {
           if (err) {
             console.log(err);
             res.status(500).send(err);
+            return;
           }
 
-          db.create(file.name)
-          .then(result => {
-            thumb({
-              source: path.resolve(`./files/${file.name}`),
-              target: path.resolve(`./files/${file.name.slice(0, -4)}.jpg"`),
-              width: 480,
-              height: 340,
-              seconds: 10
-            })
+          let source = path.resolve(`./files/${file.name}`);
+          let target = path.resolve(`./files/${file.name.slice(0, -4)}.jpg"`);
+          await createThumbnail(source, target);
 
-            res.send(file.name);
+          let thumbFile = fs.readFileSync(`./files/${file.name.slice(0, -4)}.jpg`);
+
+          let thumbUrl = await upload(`${file.name.slice(0, -4)}.jpg`, thumbFile, 'image/jpeg');
+          let videoUrl = await upload(file.name, file.data, 'video/mp4');
+
+          db.create(file.name, videoUrl, thumbUrl)
+          .then(result => {
+            fs.unlink(path.resolve(`./files/${file.name}`), () => {});
+            fs.unlink(path.resolve(`./files/${file.name.slice(0, -4)}.jpg`), () => {});
+            res.send('uploaded');
           })
           .catch(err => {
             console.log(err);
             res.status(500).send('file upload unsuccessful');
-          })
-        })
+          });
+
+        });
+
       }
     })
-
+    .catch(err =>{
+      res.status(500).send('server error');
+    })
   }
 });
 
