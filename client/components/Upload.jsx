@@ -10,7 +10,6 @@ const Upload = () => {
   const handleChange = (e) => {
     let file = e.target.files[0];
     updateFile(file);
-    console.log(file);
   };
 
   const uploadFile = (e) => {
