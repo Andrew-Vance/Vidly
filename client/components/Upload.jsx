@@ -58,7 +58,7 @@ const Upload = () => {
   return (
     <div className='uploadView'>
       <form className='uploadForm' onSubmit={uploadFile}>
-      <div>Title of Video: <input className='titleInput' type="text" name="title" onChange={(e)=>{updateFileName(e.target.value + '.mp4')}}/></div>
+      <div>Title of Video: <input className='titleInput' type="text" name="title" required onChange={(e)=>{updateFileName(e.target.value + '.mp4')}}/></div>
       Video Description: <input className='descriptionInput' type='text' onChange={(e) => {updateDescription(e.target.value)}}></input> <br></br>
       <input type="file" onChange={handleChange} />
       <input type="submit" value="Upload" />
